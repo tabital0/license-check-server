@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+    app:
+        build:
+            args:
+                user: license_check_server
+                uid: 1000
+            context: ../
+            dockerfile: ./docker-compose/php/Dockerfile
+        image: license_check_server
+        container_name: license_check_server-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ../:/var/www
+        networks:
+            - license_check_server
+
+    # db:
+    #     image: mysql:5.7
+    #     container_name: license_check_server-db
+    #     restart: unless-stopped
+    #     environment:
+    #         MYSQL_DATABASE: ${DB_DATABASE} # docker fetches these from .env file in same dir as docker-compose.yml file
+    #         MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    #         MYSQL_PASSWORD: ${DB_PASSWORD}
+    #         MYSQL_USER: ${DB_USERNAME}
+    #         SERVICE_TAGS: dev
+    #         SERVICE_NAME: mysql
+    #     volumes:
+    #         - ./mysql:/docker-entrypoint-initdb.d  #mysql image will automatically import .sql files placed in the /docker-entrypoint-initdb.d directory
+    #         - license_check_server_mysql:/var/lib/mysql
+    #     ports:
+    #         - 3307:3306
+    #     networks:
+    #         - license_check_server
+
+    nginx:
+        image: nginx:1.17-alpine
+        container_name: license_check_server-nginx
+        restart: unless-stopped
+        ports: 
+            - 8000:80
+        volumes: 
+            - ../:/var/www
+            - ./nginx:/etc/nginx/conf.d
+        networks:
+            - license_check_server
+
+networks:
+    license_check_server:
+        driver: bridge
+
+volumes:
+    license_check_server_mysql:
