@@ -14,7 +14,7 @@ $data = json_decode($json, true);
 
 $validMethods = ['license_status'];
 
-if (empty($data['method'])) {
+if (empty($data['pkApiMethod'])) {
     $response['message'] = "No method supplied.";
     echo json_encode($response);
     exit;
@@ -26,8 +26,8 @@ if (empty($data['licenseKey'])) {
     exit;
 }
 
-if (!in_array($data['method'], $validMethods)) {
-    $response['message'] = "Invalid method {$data['method']}.";
+if (!in_array($data['pkApiMethod'], $validMethods)) {
+    $response['message'] = "Invalid method {$data['pkApiMethod']}.";
     echo json_encode($response);
     exit;
 }
@@ -35,7 +35,7 @@ if (!in_array($data['method'], $validMethods)) {
 $key = $data['licenseKey'];
 $pk = new PaykickstartAPI($config['auth_token']);
 
-switch($data['method']) {
+switch($data['pkApiMethod']) {
     case 'license_status':
         echo json_encode($pk->get_status($key));
         break;
