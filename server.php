@@ -9,8 +9,9 @@ $response = [
     'data' => [],
 ];
 
-$json = file_get_contents('php://input');
-$data = json_decode($json, true);
+// $json = file_get_contents('php://input');
+// $data = json_decode($json, true);
+$data = $_GET;
 
 $validMethods = ['license_status'];
 
